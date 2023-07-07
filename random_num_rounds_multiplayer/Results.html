@@ -1,0 +1,17 @@
+{{ block title }}
+    Results
+{{ endblock }}
+{{ block content }}
+
+    <p><i>Your results page goes here...</i></p>
+
+    {{ if participant.finished_rounds }}
+        <p>The game was randomly determined to stop at this round.</p>
+    {{ else }}
+        <p>The game will continue to the next round.</p>
+    {{ endif }}
+
+    {{ formfields }}
+    {{ next_button }}
+
+{{ endblock }}

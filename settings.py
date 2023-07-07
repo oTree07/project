@@ -1,11 +1,19 @@
 from os import environ
 
+
 SESSION_CONFIGS = [
-    # dict(
-    #     name='public_goods',
-    #     app_sequence=['public_goods'],
-    #     num_demo_participants=3,
-    # ),
+    dict(
+        name='dropout_end_game',
+        display_name="Dropout end game",
+        app_sequence=['dropout_end_game', 'payment_info'],
+        num_demo_participants=3,
+    ),
+    dict( 
+        name='random_num_rounds_multiplayer', 
+        display_name="Random num rounds multiplayer", 
+        app_sequence=['random_num_rounds_multiplayer', 'payment_info'],
+        num_demo_participants=2,
+    ),
 ]
 
 # if you set a property in SESSION_CONFIG_DEFAULTS, it will be inherited by all configs
@@ -28,10 +36,22 @@ LANGUAGE_CODE = 'en'
 REAL_WORLD_CURRENCY_CODE = 'USD'
 USE_POINTS = True
 
+ROOMS = [
+    dict(
+        name='live_demo', 
+        display_name='Room for live demo (no participant labels)'
+    ),
+]
+
 ADMIN_USERNAME = 'admin'
 # for security, best to set admin password in an environment variable
 ADMIN_PASSWORD = environ.get('OTREE_ADMIN_PASSWORD')
 
-DEMO_PAGE_INTRO_HTML = """ """
+DEMO_PAGE_INTRO_HTML = """
+Here are some oTree games.
+"""
 
-SECRET_KEY = '3233678244384'
+
+SECRET_KEY = '8562055223473'
+
+INSTALLED_APPS = ['otree']
