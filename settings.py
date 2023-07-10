@@ -3,16 +3,10 @@ from os import environ
 
 SESSION_CONFIGS = [
     dict(
-        name='dropout_end_game',
-        display_name="Dropout end game",
-        app_sequence=['dropout_end_game', 'payment_info'],
+        name='orgmas',
+        display_name="Orgams",
+        app_sequence=['orgams'],
         num_demo_participants=3,
-    ),
-    dict( 
-        name='random_num_rounds_multiplayer', 
-        display_name="Random num rounds multiplayer", 
-        app_sequence=['random_num_rounds_multiplayer', 'payment_info'],
-        num_demo_participants=2,
     ),
 ]
 
@@ -30,7 +24,7 @@ SESSION_FIELDS = []
 
 # ISO-639 code
 # for example: de, fr, ja, ko, zh-hans
-LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = 'es'
 
 # e.g. EUR, GBP, CNY, JPY
 REAL_WORLD_CURRENCY_CODE = 'USD'
