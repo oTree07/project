@@ -1,0 +1,12 @@
+{{ block content }}
+
+  <h1>Periodo {{ player.round_number }}</h1>
+  
+  <p>Donante: {% if player.es_donante %}Sí{% else %}No{% endif %}</p>
+  <p>Organo A: {% if player.organo_a_funcional %}Funcional{% else %}Fallo{% endif %}</p>
+  <p>Organo B: {% if player.organo_b_funcional %}Funcional{% else %}Fallo{% endif %}</p>
+  <p>En lista de espera: {% if player.en_lista_espera %}Sí{% else %}No{% endif %}</p>
+  
+  {{ next_button }}
+
+{{ endblock }}

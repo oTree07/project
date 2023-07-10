@@ -1,10 +1,9 @@
+import random
 from otree.api import *
 
 doc = """
-Multiplayer Organ Donation Game
+Juego de donación de órganos
 """
-
-import random
 
 class C(BaseConstants):
     NAME_IN_URL = 'organ_donation'
@@ -14,107 +13,105 @@ class C(BaseConstants):
 
 
 class Group(BaseGroup):
-    donations = models.IntegerField(initial=0)
+    donaciones = models.IntegerField(initial=0)
+
 
 class Player(BasePlayer):
+    caso = models.CharField()
     round_number = models.IntegerField(initial=0)
-    is_donor = models.BooleanField(initial=False)
-    scenario = models.CharField()
-    organ_a_functional = models.BooleanField(initial=True)
-    organ_b_functional = models.BooleanField(initial=True)
-    on_waiting_list = models.BooleanField(initial=False)
-    periods_on_list = models.IntegerField(initial=0)
-
-    def update_organs(self):
-        self.organ_a_functional = True
-        self.organ_b_functional = True
-
-    def join_waiting_list(self):
-        self.on_waiting_list = True
-
-    def leave_waiting_list(self):
-        self.on_waiting_list = False
-        self.periods_on_list = 0
-
-    def increment_periods_on_list(self):
-        self.periods_on_list += 1
+    periodos_en_lista = models.IntegerField(initial=0)
+    organo_a_funcional = models.BooleanField(initial=True)
+    organo_b_funcional = models.BooleanField(initial=True)
+    es_donante = models.BooleanField(initial=False)
+    donacion_previa = models.BooleanField(initial=False)
+    en_lista_espera = models.BooleanField(initial=False)
+    fuera_de_juego = models.BooleanField(initial=False)
 
 
 class Subsession(BaseSubsession):
     pass
 
-class Splash(Page):
+
+class Donacion(Page):
     timeout_seconds = 15
+    form_model = 'player'
+    form_fields = ['es_donante']
 
     @staticmethod
     def is_displayed(player: Player):
         return player.round_number == 1
 
-class WaitingTime(WaitPage):
-    pass
-
-class Donation(Page):
-    timeout_seconds = 15
-    form_model = 'player'
-    form_fields = ['is_donor']
-
-    @staticmethod
-    def is_displayed(player: Player):
-        return not player.is_donor
-
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
-        if player.round_number <= 10 and not timeout_happened:
-            if player.is_donor:
+        group = player.group
+        if player.es_donante:
+            group.donaciones += 1
+            if player.round_number <= 10 and not timeout_happened:
                 player.payoff -= C.CHANGE_COST
 
-class Status(Page):
+
+class Espera(WaitPage):
+    pass
+
+
+class Simulacion(Page):
     timeout_seconds = 15
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         group = player.group
-        scenario = random.choices(['A', 'B', 'C'], [0.10, 0.20, 0.70])[0]
-        player.scenario = scenario
+        caso = random.choices(['A', 'B', 'C'], [0.10, 0.20, 0.70])[0]
+        player.caso = caso
 
-        if scenario == 'A':
-            player.organ_a_functional = False
-        elif scenario == 'B':
-            if player.organ_b_functional:
-                player.organ_b_functional = False
-                player.join_waiting_list()
-                if player.periods_on_list == 5:
-                    player.leave_waiting_list()
-                elif group.donations > 0:
-                    group.decrement_donations()
+        if caso == 'A':
+            player.organo_a_funcional = False
+            player.fuera_de_juego = True
+        elif caso == 'B':
+            if player.donacion_previa:
+                player.fuera_de_juego = True
+            else:
+                player.organo_b_funcional = False
+                player.en_lista_espera = True
         else:
-            player.update_organs()
+            #player.organo_a_funcional = True
+            player.organo_b_funcional = True
             player.payoff += 3
 
     @staticmethod
     def is_displayed(player: Player):
-        return not player.on_waiting_list
+        return not player.en_lista_espera and not player.fuera_de_juego
 
-class WaitList(Page):
+
+class ListaEspera(Page):
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
-        if player.on_waiting_list:
-            player.increment_periods_on_list()
+        group = player.group
+
+        if group.donaciones > 0:
+            group.donaciones -= 1
+            player.donacion_previa = True
+            player.periodos_en_lista = 0
+
+        if player.periodos_en_lista >= 5:
+            player.fuera_de_juego = True
+        
+        player.periodos_en_lista += 1
 
     @staticmethod
     def is_displayed(player: Player):
-        return player.on_waiting_list
+        return player.en_lista_espera and not player.fuera_de_juego
 
-class GameOver(Page):
+
+class FinRonda(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return player.organ_a_functional
+        return player.fuera_de_juego
+
 
 page_sequence = [
-    Splash,
-    WaitingTime,
-    Donation,
-    Status,
-    WaitList,
-    GameOver
+    Donacion,
+    Espera,
+    Simulacion,
+    ListaEspera,
+    FinRonda
 ]
