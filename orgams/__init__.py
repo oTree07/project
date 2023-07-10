@@ -46,7 +46,7 @@ class Donacion(Page):
         group = player.group
         if player.es_donante:
             group.donaciones += 1
-            if player.round_number <= 10 and not timeout_happened:
+            if player.round_number <= 10:
                 player.payoff -= C.CHANGE_COST
 
 
@@ -55,7 +55,7 @@ class Espera(WaitPage):
 
 
 class Simulacion(Page):
-    timeout_seconds = 15
+    timeout_seconds = 5
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
@@ -74,7 +74,7 @@ class Simulacion(Page):
                 player.en_lista_espera = True
         else:
             #player.organo_a_funcional = True
-            player.organo_b_funcional = True
+            #player.organo_b_funcional = True
             player.payoff += 3
 
     @staticmethod
@@ -83,6 +83,8 @@ class Simulacion(Page):
 
 
 class ListaEspera(Page):
+    timeout_seconds = 5
+
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         group = player.group
@@ -103,6 +105,8 @@ class ListaEspera(Page):
 
 
 class FinRonda(Page):
+    timeout_seconds = 5
+
     @staticmethod
     def is_displayed(player: Player):
         return player.fuera_de_juego
