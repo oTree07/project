@@ -19,7 +19,7 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    caso = models.CharField()
+    caso = models.CharField(initial="")
     round_number = models.IntegerField(initial=0)
     periodos_en_lista = models.IntegerField(initial=0)
     organo_a_funcional = models.BooleanField(initial=True)
@@ -32,12 +32,21 @@ class Player(BasePlayer):
 
 # FUNCTIONS
 
+def log(p: Player, fx):
+    g = p.group
+
+    print("Player {}: {} | Donante: {} | Donaciones: {} | Donacion Previa: {} | Caso: {} | Organo A: {} | Organo B: {} | Lista de Espera: {} | Periodos: {} | Fuera: {} | Payoff: {}".format(
+        p.id_in_group, fx, p.es_donante, g.donaciones, p.donacion_previa, p.caso, p.organo_a_funcional, p.organo_b_funcional, p.en_lista_espera, p.periodos_en_lista, p.fuera_de_juego, p.payoff))
+    
+
 def ElegirDonar(p: Player):
     g = p.group
     if p.es_donante:
         g.donaciones += 1
         if p.round_number <= 10:
             p.payoff -= C.CHANGE_COST
+    
+    log(p, "ElegirDonar")
 
 
 def SimularCaso(p: Player):
@@ -58,6 +67,8 @@ def SimularCaso(p: Player):
         #p.organo_a_funcional = True
         #p.organo_b_funcional = True
         p.payoff += 3
+    
+    log(p, "SimularCaso")
 
 
 def EvaluarLista(p: Player):
@@ -72,6 +83,8 @@ def EvaluarLista(p: Player):
         p.fuera_de_juego = True
     
     p.periodos_en_lista += 1
+
+    log(p, "EvaluarLista")
 
 
 # PAGES
@@ -118,8 +131,8 @@ class Espera(WaitPage):
     pass
 
 
-class FinRonda(Page):
-    timeout_seconds = 5
+class FinRonda(WaitPage):
+    #after_all_players_arrive = True
 
     @staticmethod
     def is_displayed(p: Player):
