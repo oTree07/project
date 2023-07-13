@@ -13,19 +13,13 @@ class C(BaseConstants):
 
 class Subsession(BaseSubsession):
     pass
-    #def creating_session(self):
-    #    self.group_randomly(fixed_id_in_group=True)
-    #    self.group_by_arrival_time()
+
 
 class Group(BaseGroup):
+    rondas = models.IntegerField(initial=0)
     donaciones = models.IntegerField(initial=0)
+    fin_juego = models.BooleanField(initial=False)
 
-    def before_session_starts(self):
-        for player in self.get_players():
-            player.donacion_previa = False
-            player.en_lista_espera = False
-            player.fuera_de_juego = False
-            player.pago = 0.0
 
 class Player(BasePlayer):
     caso = models.CharField(initial="")
@@ -66,6 +60,8 @@ def log(p: Player, fx):
 
 def ElegirDonar(p: Player):
     g = p.group
+    g.ronda += 1
+
     if p.es_donante:
         if p.round_number <= 10:
             p.pago -= C.CHANGE_COST
@@ -155,14 +151,27 @@ class ListaEspera(Page):
 
 
 class Espera(WaitPage):
-    pass
+    @staticmethod
+    def is_displayed(p: Player):
+        return not p.fuera_de_juego
 
 
 class FinRonda(WaitPage):
+    template_name = 'orgams/FinRonda.html'
+
     @staticmethod
     def is_displayed(p: Player):
         return p.fuera_de_juego
 
+""" class Resultados(Page):
+    @staticmethod
+    def is_displayed(p: Player):
+        g= p.group
+        return g.fin_juego
+
+    @staticmethod
+    def app_after_this_page(p: Player, upcoming_apps):
+        return upcoming_apps[0] """
 
 page_sequence = [
     Donacion,
@@ -170,4 +179,5 @@ page_sequence = [
     Simulacion,
     ListaEspera,
     FinRonda
+    #Resultados
 ]
