@@ -1,0 +1,19 @@
+{{ extends 'otree/WaitPage.html' }}
+
+{{ block title }}
+  
+  FIN
+  
+{{ endblock }}
+
+{{ block content }}
+
+  <h1>Fin de ronda</h1>
+  <h1>Ronda {{ player.group.ronda}}</h1>
+  <h1>Periodo {{ player.group.turno }}</h1>
+  <h1>Caso {{ player.caso }}</h1>
+
+  <p>El pago obtenido en esta ronda es: {{ player.pago }}</p>
+
+  
+{{ endblock }}

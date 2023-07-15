@@ -1,6 +1,8 @@
 {{ block content }}
 
-  <h1>Periodo {{ player.round_number }}</h1>
+  <h1>Ronda {{ player.group.ronda}}</h1>
+  <h1>Periodo {{ player.group.turno }}</h1>
+  <h1>Caso {{ player.caso }}</h1>
   
   <p>Donante: {% if player.es_donante %}Sí{% else %}No{% endif %}</p>
   <p>Organo A: {% if player.organo_a_funcional %}Funcional{% else %}Fallo{% endif %}</p>
