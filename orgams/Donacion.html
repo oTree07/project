@@ -6,11 +6,25 @@
 
 {{ block content }}
 
-  <h2>¿Desea cambiar tu estado a DONANTE?</h2>
+  <img id="myImage" src="{{ static 'images/1.png' }}" style="display:none;" />
 
-  <button name="es_donante" value="True">Sí</button>
-  <button name="es_donante" value="False">No</button>
+  <script>
+    // Muestra la imagen primero
+    document.getElementById("myImage").style.display = "block";
+  </script>
 
-  <img src="{{ static 'images/1.png' }}"/>
+  <h2 id="question" style="display:none;">¿Desea cambiar tu estado a DONANTE?</h2>
+
+  <button id="yesButton" name="es_donante" value="True" style="display:none;">Sí</button>
+  <button id="noButton" name="es_donante" value="False" style="display:none;">No</button>
+
+  <script>
+    // Muestra la pregunta y los botones después de 5 segundos
+    setTimeout(function() {
+      document.getElementById("question").style.display = "block";
+      document.getElementById("yesButton").style.display = "inline-block";
+      document.getElementById("noButton").style.display = "inline-block";
+    }, 5000);
+  </script>
 
 {{ endblock }}

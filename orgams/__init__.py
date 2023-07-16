@@ -35,6 +35,7 @@ class Player(BasePlayer):
     fuera_de_juego = models.BooleanField(initial=False)
     fin_turno = models.BooleanField(initial=False)
     pago = models.FloatField(initial=0.0)
+    flag = models.BooleanField(initial=True)
 
 
 # FUNCTIONS
@@ -64,13 +65,11 @@ def ResetearJugador(p: Player):
     g.donaciones = 0 
 
 def GuardarJugador(p: Player):
+    global TURNO
     subsession = p.subsession
     g = p.group
-    print("guar")
     if TURNO > 1:
-        print("I: " + str(g.turno))
         for p in subsession.get_players():
-            print(str(TURNO) + "www" + str(g.turno))
             anterior = p.in_round(p.round_number - 1)
             g.donaciones = anterior.group.donaciones
             g.turno = anterior.group.turno
@@ -90,10 +89,7 @@ def Donar():
     global INICIO
     global TURNO
 
-    if TURNO == 1:
-        return True
-    else:
-        return False
+    return INICIO
 
 def FIN():
     global RONDA
@@ -104,23 +100,22 @@ def Evaluar(p: Player):
     global INICIO
     global TURNO
     global RONDA
-
-    #INICIO = False
+    global FLAG
     
     g = p.group
     p.fin_turno = True
 
-    if all(p.fin_turno == True for p in g.subsession.get_players()):
-        print("I: " + str(g.turno))
+    if all(p.flag == True for p in g.subsession.get_players()):
         
         if INICIO == False:
             g.turno += 1
             TURNO += 1
 
-        INICIO = False
+        INICIO = False #problem
+        p.flag = False
+
 
     if all(p.fuera_de_juego == True for p in g.subsession.get_players()):
-        print("FIN RONDA " + str(g.ronda))
         ResetearJugador(p)
         g.ronda += 1
         INICIO = True
@@ -128,11 +123,14 @@ def Evaluar(p: Player):
         RONDA += 1
 
 def ElegirDonar(p: Player):
+    global RONDA
+    global INICIO
+    INICIO = False
 
     g = p.group
 
     if p.es_donante:
-        if g.ronda <= 10:
+        if RONDA <= 10:
             p.pago -= C.CHANGE_COST
     
     log(p, "ElegirDonar")
@@ -190,13 +188,17 @@ class Donacion(Page):
     def is_displayed(p: Player):
         global INICIO
 
-        print("DOn" + str(Donar()))
-
         if not Donar():
             GuardarJugador(p)
 
         return Donar()
 
+    def vars_for_template(self):
+        global RONDA
+        return {
+            'RONDA': RONDA
+        }
+    
     @staticmethod
     def before_next_page(p: Player, timeout_happened):
         ElegirDonar(p)
@@ -207,8 +209,14 @@ class Simulacion(Page):
 
     @staticmethod
     def is_displayed(p: Player):
-        return not p.en_lista_espera and not p.fuera_de_juego 
+        return not p.en_lista_espera and not p.fuera_de_juego
     
+    def vars_for_template(self):
+        global RONDA
+        return {
+            'RONDA': RONDA
+        }
+
     @staticmethod
     def before_next_page(p: Player, timeout_happened):
         SimularCaso(p)
@@ -221,6 +229,12 @@ class ListaEspera(Page):
     def is_displayed(p: Player):
         return p.en_lista_espera and not p.fuera_de_juego
     
+    def vars_for_template(self):
+        global RONDA
+        return {
+            'RONDA': RONDA
+        }
+
     @staticmethod
     def before_next_page(p: Player, timeout_happened):
         EvaluarLista(p)
@@ -235,6 +249,12 @@ class Espera(WaitPage):
 class FinTurno(WaitPage):
     template_name = 'orgams/FinTurno.html'
 
+    def vars_for_template(self):
+        global RONDA
+        return {
+            'RONDA': RONDA
+        }
+
     @staticmethod
     def is_displayed(p: Player):
         return p.fuera_de_juego
@@ -242,7 +262,6 @@ class FinTurno(WaitPage):
 class FinRonda(Page):
     @staticmethod
     def is_displayed(p: Player):
-        print("FIN")
         Evaluar(p)
         return FIN() == 3
 
