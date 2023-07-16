@@ -35,7 +35,6 @@ class Player(BasePlayer):
     fuera_de_juego = models.BooleanField(initial=False)
     fin_turno = models.BooleanField(initial=False)
     pago = models.FloatField(initial=0.0)
-    flag = models.BooleanField(initial=True)
 
 
 # FUNCTIONS
@@ -43,8 +42,8 @@ class Player(BasePlayer):
 def log(p: Player, fx):
     g = p.group
 
-    print("{} - Player {}: {} | Donante: {} | Donaciones: {} | Donacion Previa: {} | Caso: {} | Organo A: {} | Organo B: {} | Lista de Espera: {} | Periodos: {} | Fuera: {} | Payoff: {}".format(
-        g.turno, p.id_in_group, fx, p.es_donante, g.donaciones, p.donacion_previa, p.caso, p.organo_a_funcional, p.organo_b_funcional, p.en_lista_espera, p.periodos_en_lista, p.fuera_de_juego, p.pago))
+    print("Player {}: {} | Donante: {} | Donaciones: {} | Donacion Previa: {} | Caso: {} | Organo A: {} | Organo B: {} | Lista de Espera: {} | Periodos: {} | Fuera: {} | Payoff: {}".format(
+        p.id_in_group, fx, p.es_donante, g.donaciones, p.donacion_previa, p.caso, p.organo_a_funcional, p.organo_b_funcional, p.en_lista_espera, p.periodos_en_lista, p.fuera_de_juego, p.pago))
     
 def ResetearJugador(p: Player):
     subsession = p.subsession
@@ -85,13 +84,12 @@ def GuardarJugador(p: Player):
             p.pago = anterior.pago
 
 
-def Donar():
+def Inicio():
     global INICIO
-    global TURNO
 
     return INICIO
 
-def FIN():
+def Ronda():
     global RONDA
 
     return RONDA
@@ -100,20 +98,17 @@ def Evaluar(p: Player):
     global INICIO
     global TURNO
     global RONDA
-    global FLAG
     
     g = p.group
-    p.fin_turno = True
 
-    if all(p.flag == True for p in g.subsession.get_players()):
+    if all(p.fin_turno == False for p in g.subsession.get_players()):
         
         if INICIO == False:
             g.turno += 1
             TURNO += 1
 
-        INICIO = False #problem
-        p.flag = False
-
+        INICIO = False
+        p.fin_turno = True
 
     if all(p.fuera_de_juego == True for p in g.subsession.get_players()):
         ResetearJugador(p)
@@ -186,12 +181,11 @@ class Donacion(Page):
 
     @staticmethod
     def is_displayed(p: Player):
-        global INICIO
 
-        if not Donar():
+        if not Inicio():
             GuardarJugador(p)
 
-        return Donar()
+        return Inicio()
 
     def vars_for_template(self):
         global RONDA
@@ -263,7 +257,7 @@ class FinRonda(Page):
     @staticmethod
     def is_displayed(p: Player):
         Evaluar(p)
-        return FIN() == 3
+        return Ronda() == 3
 
     @staticmethod
     def app_after_this_page(p: Player, upcoming_apps):
