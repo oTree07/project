@@ -264,6 +264,7 @@ class FinRonda(Page):
         return upcoming_apps[0]
 
 page_sequence = [
+    Espera,
     Donacion,
     Espera,
     Simulacion,

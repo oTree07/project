@@ -133,6 +133,8 @@ class Player(BasePlayer):
     )
 
 class Questions(Page):
+    timeout_seconds = 120
+
     form_model = 'player'
     form_fields = [
         'email', 'sexo', 'edad', 'ultimo_ciclo', 'distrito_residencia', 'carrera',
@@ -142,18 +144,10 @@ class Questions(Page):
         'asistencia_religiosa'
     ]
 
+
 class WaitForOthers(WaitPage):
     pass
 
-    def app_after_this_page(player: Player, upcoming_apps):
-        return upcoming_apps[0]
-
-class EndQuestions(Page):
-    @staticmethod
-    def is_displayed(player: Player):
-        return True
-
-    @staticmethod
     def app_after_this_page(player: Player, upcoming_apps):
         return upcoming_apps[0]
 
