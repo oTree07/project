@@ -22,7 +22,7 @@ class Player(BasePlayer):
     sexo = models.StringField(
         label='Sexo',
         choices=['Masculino', 'Femenino'],
-        widget=widgets.RadioSelectHorizontal
+        widget=widgets.RadioSelectHorizontal,
     )
     edad = models.IntegerField(
         label='Edad',
