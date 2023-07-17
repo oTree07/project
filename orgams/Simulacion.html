@@ -1,13 +1,25 @@
+{{ block title }}
+
+  <h1>Resultados</h1>
+
+{{ endblock }}
+
 {{ block content }}
 
-  <h1>Ronda {{ RONDA }}</h1>
-  <h1>Periodo {{ player.group.turno }}</h1>
-  <h1>Caso {{ player.caso }}</h1>
-  
-  <p>Donante: {% if player.es_donante %}Sí{% else %}No{% endif %}</p>
-  <p>Organo A: {% if player.organo_a_funcional %}Funcional{% else %}Fallo{% endif %}</p>
-  <p>Organo B: {% if player.organo_b_funcional %}Funcional{% else %}Fallo{% endif %}</p>
-  <p>En lista de espera: {% if player.en_lista_espera %}Sí{% else %}No{% endif %}</p>
+  <p>Ronda: {{ player.group.ronda }} | Turno: {{ player.group.turno }}</p>
+
+  <h3>Información</h3>  
+  {{ if player.caso == "" }}
+    <p>Información inicial</p>
+  {{ else }}
+    <p>Caso {{ player.caso }}</p>
+  {{ endif }}
+  <p>Total de donaciones disponibles: {{ player.group.donaciones }}</p>  
+  <p>Es donante: {{ if player.es_donante }} Sí {{ else }} No {{ endif }}</p>
+  <p>Organo A: {{ if player.organo_a_funcional }} Funcional {{ else }} Fallo {{ endif }}</p>
+  <p>Organo B: {{ if player.organo_b_funcional }} Funcional {{ else }} Fallo {{ endif }}</p>
+  <p>En lista de espera: {{ if player.en_lista_espera }} Sí {{ else }} No {{ endif }}</p>
+  <p>Donación previa: {{ if player.donacion_previa }} Sí {{ else }} No {{ endif }}</p>
   
   {{ next_button }}
 
