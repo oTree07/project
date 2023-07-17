@@ -1,0 +1,51 @@
+{{ block title }}
+    Preguntas
+{{ endblock }}
+
+{{ block content }}
+    <form method="post">
+        {{ formfield 'email' }}
+        <br><br>
+        {{ formfield 'sexo'}}
+        <br><br>
+        {{ formfield 'edad'}}
+        <br><br>
+        {{ formfield 'ultimo_ciclo'}}
+        <br><br>
+        {{ formfield 'distrito_residencia'}}
+        <br><br>
+        {{ formfield 'carrera'}}
+        <br><br>
+        {{ formfield 'escala_pagos'}}
+        <br><br>
+        {{ formfield 'lugar_nacimiento'}}
+        <br><br>
+        {{ formfield 'autodeterminacion_etnica'}}
+        <br><br>
+        {{ formfield 'colegio_procedencia'}}
+        <br><br>
+        {{ formfield 'sector_trabajo'}}
+        <br><br>
+        {{ formfield 'num_hermanos'}}
+        <br><br>
+        {{ formfield 'padre_vivo'}}
+        <br><br>
+        {{ formfield 'madre_viva'}}
+        <br><br>
+        {{ formfield 'grado_padre'}}
+        <br><br>
+        {{ formfield 'grado_madre'}}
+        <br><br>
+        {{ formfield 'seguro_salud'}}
+        <br><br>
+        {{ formfield 'tipo_seguro_salud'}}
+        <br><br>
+        {{ formfield 'padres_separados'}}
+        <br><br>
+        {{ formfield 'religion'}}
+        <br><br>
+        {{ formfield 'asistencia_religiosa'}}
+        <br><br>
+        <input type="submit" value="Enviar">
+    </form>
+{{ endblock }}
