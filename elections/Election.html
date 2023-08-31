@@ -1,0 +1,36 @@
+{{ block title }}
+    Orden de priorización
+{{ endblock }}
+
+{{ block content }}
+<style>
+    .image-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    img {
+      max-width: 150px;
+      margin-right: 20px;
+    }
+  </style>
+  </head>
+  <body>
+    <p> Debera escoger un orden de prioridad para cada imagen</p>
+    <form id="priority-form">
+      <div class="image-container">
+        <img id="image" src={{ static  "images/img1.png"}} style = "display:flex;" />
+        {{ formfield 'img1' }}
+
+        <img id="image" src={{ static  "images/img2.png"}} style = "display:flex;" />
+        {{ formfield 'img2' }}
+
+        <img id="image" src={{ static  "images/img3.png"}} style = "display:flex;" />
+        {{ formfield 'img3' }}
+
+        <img id="image" src={{ static  "images/img4.png"}} style = "display:flex;" />
+        {{ formfield 'img4' }}
+      </div>
+    </form>
+  </body>
+{{ endblock }}

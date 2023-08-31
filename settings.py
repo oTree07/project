@@ -9,9 +9,9 @@ SESSION_CONFIGS = [
         num_demo_participants=3,
     ),
     dict(
-        name='questions',
-        display_name="Questions",
-        app_sequence=['questions', 'orgams'],
+        name='elections',
+        display_name="Elections",
+        app_sequence=['elections'],
         num_demo_participants=3,
     ),
 ]
