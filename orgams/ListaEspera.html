@@ -1,22 +1,22 @@
 {{ block title }}
 
-  <h1>Lista de Espera</h1>
+  <h1>Ronda {{ player.group.ronda }}, Periodo {{ player.group.turno }}</h1>
 
 {{ endblock }}
 
 {{ block content }}
 
-  <p>Ronda: {{ player.group.ronda }} | Turno: {{ player.group.turno }}</p>
+  <h2>TE ENCUENTRAS EN LA LISTA DE ESPERA DE DONACIÓN DE ÓRGANOS</h2>  
+  <ul>
+  <li>Caso {{ player.caso }}</li>
+  <li>Total de donaciones disponibles: {{ player.group.donaciones }}</li>  
+  <li>Organo A: {{ if player.organo_a_funcional }} Funcional {{ else }} Fallo {{ endif }}</li>
+  <li>Organo B: {{ if player.organo_b_funcional }} Funcional {{ else }} Fallo {{ endif }}</li>
+  <li>Turnos en lista de espera: {{player.turnos_en_espera}}</li>
+</ul>
+  <p>Por favor, espera un momento mientras los demás jugadores toman sus decisiones.</p>
 
-  <h3>Información</h3>  
-  <p>Caso {{ player.caso }}</p>
-  <p>Total de donaciones disponibles: {{ player.group.donaciones }}</p>  
-  <p>Organo A: {{ if player.organo_a_funcional }} Funcional {{ else }} Fallo {{ endif }}</p>
-  <p>Organo B: {{ if player.organo_b_funcional }} Funcional {{ else }} Fallo {{ endif }}</p>
-  <p>Turnos en lista de espera: {{player.turnos_en_espera}}</p>
   
-  <p>Estás en la lista de espera. Por favor, espera a que los demás jugadores tomen su decisión.</p>
-
   {{ next_button }}
 
 {{ endblock }}
