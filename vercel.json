@@ -1,7 +1,6 @@
 {
     "builds": [
         {
-            "buildCommand": "otree devserver",
             "use": "@vercel/python"
         }
     ],
