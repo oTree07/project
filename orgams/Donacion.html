@@ -12,9 +12,16 @@
     document.getElementById("image").style.display = "block";
   </script>
 <br>
-  <h2 id="question" style="display:none;">¿Deseas cambiar tu estado de NO DONANTE a DONANTE? <br> 
-    <span style="font-size: 16px;">Recuerda que el cambio tiene un costo de XX dólares experimentales</span>
+
+  {{ if costo_cambio == 0 }}
+      <h2 id="question">¿Deseas cambiar tu estado de NO DONANTE a DONANTE? <br> 
+        <span style="font-size: 16px;">Recuerda que el cambio no tiene costo alguno</span>
     </h2>
+  {{ else }}
+      <h2 id="question">¿Deseas cambiar tu estado de NO DONANTE a DONANTE? <br> 
+          <span style="font-size: 16px;">Recuerda que el cambio tiene un costo de {{ costo_cambio }} dólares experimentales</span>
+      </h2>
+  {{ endif }}
      
   <button id = "yesButton" name = "es_donante" value = "True" style = "display:none;"> Sí </button>
   <button id = "noButton" name = "es_donante" value = "False" style = "display:none;"> No </button>

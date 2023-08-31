@@ -511,9 +511,12 @@ class Donacion(Page):
             if Ronda() <= ronda:
                 image = 'images/{}.png'.format(imagen)
                 break
+
+        costo_ronda = 0.75 if Ronda() < 10 else 0
         
         return dict(
-            image_path = image
+            image_path = image,
+            costo_cambio = costo_ronda
         )
 
     @staticmethod
