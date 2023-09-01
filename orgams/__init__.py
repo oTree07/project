@@ -301,9 +301,24 @@ class Player(BasePlayer):
     )
 
     #Para priorización
-    prioriza = models.StringField(
-        choices=['1','2','3','4'],
-        label='Ordene las 4 opciones según su prioridad (1 con mayor prioridad, 4 con menor prioridad)',   
+    img1 = models.StringField(
+        label='Orden',
+        choices=['1', '2', '3', '4']
+    )
+
+    img2 = models.StringField(
+        label='Orden',
+        choices=['1', '2', '3', '4']
+    )
+
+    img3 = models.StringField(
+        label='Orden',
+        choices=['1', '2', '3', '4']
+    )
+
+    img4 = models.StringField(
+        label='Orden',
+        choices=['1', '2', '3', '4']
     )
 # FUNCTIONS
 # PAGES
@@ -332,8 +347,12 @@ class Instrucciones(Page):
     form_model = 'player'
 
 class Priorización(Page):
+    timeout_seconds = 120
+
     form_model = 'player'
-    #form_fields = ['prioriza']
+    form_fields = [
+        'img1', 'img2', 'img3', 'img4'
+    ]
 
 class zFinal(Page):
     form_model = 'player'
@@ -569,7 +588,7 @@ class FinRonda(Page):
 
 page_sequence = [#Demographics, Donacion1, Donacion2,Racismo, 
     #Instrucciones,
-    #Priorización,
+    Priorización,
     #zFinal,
     Donacion,
     Espera,
