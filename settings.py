@@ -5,13 +5,13 @@ SESSION_CONFIGS = [
     dict(
         name='orgams',
         display_name="Orgams",
-        app_sequence=['orgams', 'questions'],
+        app_sequence=['orgams'],
         num_demo_participants=3,
     ),
     dict(
-        name='questions',
-        display_name="Questions",
-        app_sequence=['questions', 'orgams'],
+        name='elections',
+        display_name="Elections",
+        app_sequence=['elections'],
         num_demo_participants=3,
     ),
 ]
