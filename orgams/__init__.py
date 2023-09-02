@@ -13,7 +13,7 @@ RONDA = 1
 class C(BaseConstants):
     NAME_IN_URL = 'organ_donation'
     PLAYERS_PER_GROUP = None
-    NUM_ROUNDS = 20 # Número de rondas máximas
+    NUM_ROUNDS = 200
     CHANGE_COST = 0.75
     
 # Subclases del juego
@@ -300,7 +300,7 @@ class Player(BasePlayer):
         widget=widgets.RadioSelect,
     )
 
-    #Para priorización
+    #Para priorizacion
     img1 = models.StringField(
         label='Orden',
         choices=['1', '2', '3', '4']
@@ -346,13 +346,17 @@ class Racismo(Page):
 class Instrucciones(Page):
     form_model = 'player'
 
-class Priorización(Page):
-    timeout_seconds = 120
+class Priorizacion(Page):
+    timeout_seconds = 10
 
     form_model = 'player'
     form_fields = [
         'img1', 'img2', 'img3', 'img4'
     ]
+
+    @staticmethod
+    def is_displayed(p: Player):
+        return True if Ronda() == 1 and Inicio() else False
 
 class zFinal(Page):
     form_model = 'player'
@@ -362,8 +366,8 @@ class zFinal(Page):
 # Función para imprimir información del jugador
 def log(p: Player, fx):
     g = p.group
-    print("Player {}: {} | Donante: {} | Donaciones: {} | Donacion Previa: {} | Caso: {} | Organo A: {} | Organo B: {} | Lista de Espera: {} | Turnos en lista: {} | Fin Turno: {} | Pago: {}".format(
-        p.id_in_group, fx, p.es_donante, g.donaciones, p.donacion_previa, p.caso, p.organo_a_funcional, p.organo_b_funcional, p.en_lista_espera, p.turnos_en_espera, p.fuera_de_juego, p.pago))
+    print("Player {}: {} | Donante: {} | Ronda: {} | Caso: {} | Fin Turno: {} | Pago: {}".format(
+        p.id_in_group, fx, p.es_donante, Ronda(), p.caso, p.fuera_de_juego, p.pago))
 
 # Función para resetear los campos del jugador
 def ResetearJugador(p: Player):
@@ -397,7 +401,7 @@ def GuardarJugador(p: Player):
                 anterior = p.in_round(p.round_number - 1)
                 g.donaciones = anterior.group.donaciones
                 g.turno = anterior.group.turno
-                g.ronda = anterior.group.ronda
+                g.ronda = Ronda()
                 p.caso = anterior.caso
                 p.turnos_en_espera = anterior.turnos_en_espera
                 p.organo_a_funcional = anterior.organo_a_funcional
@@ -544,6 +548,12 @@ class Donacion(Page):
 
 class Simulacion(Page):
     timeout_seconds = 10
+    
+    @staticmethod
+    def vars_for_template(p: Player):
+        return dict(
+            ronda = Ronda()
+        )
 
     @staticmethod
     def is_displayed(p: Player):
@@ -555,6 +565,12 @@ class Simulacion(Page):
 
 class ListaEspera(Page):
     timeout_seconds = 10
+
+    @staticmethod
+    def vars_for_template(p: Player):
+        return dict(
+            ronda = Ronda()
+        )
 
     @staticmethod
     def is_displayed(p: Player):
@@ -580,7 +596,7 @@ class FinRonda(Page):
     @staticmethod
     def is_displayed(p: Player):
         Evaluar(p)
-        return Ronda() == 4 # Aquí colocar C.NUM_ROUNDS sino se están haciendo pruebas
+        return Ronda() == 5 # Aquí colocar 20, sino se están haciendo pruebas
 
     @staticmethod
     def app_after_this_page(p: Player, upcoming_apps):
@@ -588,7 +604,7 @@ class FinRonda(Page):
 
 page_sequence = [#Demographics, Donacion1, Donacion2,Racismo, 
     #Instrucciones,
-    Priorización,
+    Priorizacion,
     #zFinal,
     Donacion,
     Espera,
